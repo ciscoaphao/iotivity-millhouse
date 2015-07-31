@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Iotivity/Xwalk Millhouse (Arduino Mega2560 Kit)</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+<meta name="viewport" content="width=device-width">
+<style>
+body {
+  font-size: 2em;
+}
+</style>
+</head>
+<body>
+  <video autoplay loop width="100%" height="100%">
+      <source src="file:///usr/share/media/videos/AmazingNature_480p.mp4#t=0,15" type="video/mp4">
+  </video>
+  <div class="coap-app">
+    <div class="coap-sensors">
+      <div class="coap-sensor" id="TizenLogo">
+<!--
+      <img id="logo_tizen_img" src="resources/tizen_logo.jpg" width="160px" height="60px">
+-->
+      <input type="button" value="" onclick="onclickbuttonlogo(id)" class="buttonlogo" id="buttonlogo"/>
+        <img id="logo_IOC" src="resources/Iotivity_logo.png" width="160px" height="60px">
+      </div>
+<!--
+      <div class="coap-sensor" id="empty">
+        <span class="coap-sensor-name" id="currentdatetime">&nbsp;</span>
+        <span class="coap-sensor-desc">&nbsp;</span>
+        <span class="coap-sensor-state">&nbsp;</span>
+      </div>
+-->
+      <div class="coap-sensor" id="Temperature">
+        <span class="coap-sensor-pic">
+          <img src="resources/temperature.jpg" id="T_img">
+        </span>
+        <span class="coap-sensor-name">Temperature</span>
+        <span class="coap-sensor-desc">Living room</span>
+        <span class="coap-sensor-state" id="T_state">0</span>
+      </div>
+      <div class="coap-sensor" id="Motion">
+        <span class="coap-sensor-pic">
+          <img src="resources/intrusion.jpg">
+        </span>
+        <span class="coap-sensor-name">Motion</span>
+        <span class="coap-sensor-desc">Entrance</span>
+        <span class="coap-sensor-state" id="M_state">0</span>
+      </div>
+      <div class="coap-sensor" id="Distance">
+        <span class="coap-sensor-pic">
+          <img src="resources/distance.png">
+        </span>
+        <span class="coap-sensor-name">Distance (cm)</span>
+        <span class="coap-sensor-desc">Garage</span>
+        <span class="coap-sensor-state" id="D_state">0</span>
+      </div>
+      <div class="coap-sensor" id="Luminosity">
+        <span class="coap-sensor-pic">
+          <img src="resources/daylight.jpg">
+        </span>
+        <span class="coap-sensor-name">Luminosity</span>
+        <span class="coap-sensor-desc">Garden (0-1023)</span>
+        <span class="coap-sensor-state" id="L_state">0</span>
+      </div>
+    </div>
+
+    <div class="coap-devices" id="coap-devices">
+      <div class="coap-device" id="l1">
+        <span class="coap-device-pic">
+          <img id="l1_img" src="" data_on="resources/lightbulb_on.jpg" data_off="resources/lightbulb_off.jpg">
+        </span>
+        <span class="coap-device-name">PushLight1</span>
+        <span class="coap-device-desc">Back</span>
+        <span class="coap-device-state" id="l1_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="l1">On/Off</button>
+      </div>
+      <div class="coap-device" id="W">
+        <span class="coap-device-pic">
+          <img id="W_img" src="" data_on="resources/wheel_on.png" data_off="resources/wheel_off.png">
+        </span>
+        <span class="coap-device-name">MillWheel</span>
+        <span class="coap-device-desc">Outside</span>
+        <span class="coap-device-state" id="W_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="W" >On/Off</button>
+      </div>    
+      <div class="coap-device" id="l2">
+        <span class="coap-device-pic">
+          <img id="l2_img" src="" data_on="resources/lightbulb_on.jpg" data_off="resources/lightbulb_off.jpg">
+        </span>
+        <span class="coap-device-name">PushLight2</span>
+        <span class="coap-device-desc">Roof</span>
+        <span class="coap-device-state" id="l2_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="l2">On/Off</button>
+      </div>
+      <div class="coap-device" id="l3">
+        <span class="coap-device-pic">
+          <img id="l3_img" src="" data_on="resources/lightbulb_on.jpg" data_off="resources/lightbulb_off.jpg">
+        </span>
+        <span class="coap-device-name">PushLight3</span>
+        <span class="coap-device-desc">Front</span>
+        <span class="coap-device-state" id="l3_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="l3">On/Off</button>
+      </div>
+      <div class="coap-device" id="relai">
+        <span class="coap-device-pic">
+          <img src="resources/heater.jpg">
+        </span>
+        <span class="coap-device-name">Heater</span>
+        <span class="coap-device-desc">Home</span>
+        <span class="coap-device-state" id="relai_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="relai">On/Off</button>
+      </div>
+      <div class="coap-device" id="servo">
+        <span class="coap-device-pic">
+          <img src="resources/windowblind_on.png">
+        </span>
+        <span class="coap-device-name">Window blind</span>
+        <span class="coap-device-desc">Living room</span>
+        <span class="coap-device-state" id="servo_state">1</span>
+        <button class="coap-device-button" onclick="onclickbutton(id)" id="servo" >On/Off</button>
+      </div>
+
+      <div class="pip_div" id="pip_div">
+          <video autoplay loop width="300px" height="200px" muted>
+          <source src="file:///usr/share/media/videos/AmazingNature_480p.mp4#t=60" type="video/mp4">
+          </video>
+      </div>
+
+    </div>
+
+
+   </div>
+
+   <div id="clear_float_div" style="clear:both;"></div>
+<!--
+    <div class="coap-app-bottom">
+      
+    </div>
+-->
+  </div>
+
+
+<!--
+<button id="button_setLight"  onclick="onclickbutton()" > 
+    SetLightl</button>
+<div id="out"></div>
+-->
+
+
+<script>
+var millfrontlight;
+var millrooflight;
+var millbacklight;
+var millservo;
+var millrelai;
+var millwheel;
+var milltemperature;
+var milldistance;
+var millluminosity;
+var millmotion;
+
+
+var device = new iotivity.OicDevice();
+
+device.configure({
+  url: "0.0.0.0:0",
+  role: "intermediate",
+  connectionMode: "non-acked"
+  });
+
+
+
+
+
+function LogOutput(msg) {
+    console.log(msg + "\n");
+}
+
+
+
+var deviceState = {};
+var deviceNameArray = ["l1", "l2", "l3", "T", "D", "L", "M", "S", "R", "W"];
+var div = document.getElementById('out');
+var p1 = document.createElement('p');
+var p2 = document.createElement('p');
+var p3 = document.createElement('p');
+var l1 = document.createElement('p');
+
+
+function setDeviceState(id, value) {
+
+  var resource;
+
+  if (id == "l1")
+      resource = millbacklight;
+  else if (id == "l2")
+      resource = millrooflight;
+  else if (id == "l3")
+      resource = millfrontlight;
+  else if (id == "T")
+      resource = milltemperature;
+  else if (id == "D")
+      resource = milldistance;
+  else if (id == "L")
+      resource = millluminosity;
+  else if (id == "M")
+      resource = millmotion;
+  else if (id == "S")
+      resource = millservo;
+  else if (id == "R")
+      resource = millrelai;
+  else if (id == "W")
+      resource = millwheel;
+
+  if (resource == null)
+      return;
+
+  resource.properties.value = value;
+
+  device.client.updateResource(resource)
+      .then(function() { 
+          LogOutput("Changed resource");
+      },function() { 
+          LogOutput("Error update resource"); 
+  });       
+}
+
+function getDeviceState(id) {
+
+  var resource = null;
+
+  if (id == "l1")
+      resource = millbacklight;
+  else if (id == "l2")
+      resource = millrooflight;
+  else if (id == "l3")
+      resource = millfrontlight;
+  else if (id == "T")
+      resource = milltemperature;
+  else if (id == "D")
+      resource = milldistance;
+  else if (id == "L")
+      resource = millluminosity;
+  else if (id == "M")
+      resource = millmotion;
+  else if (id == "S")
+      resource = millservo;
+  else if (id == "R")
+      resource = millrelai;
+  else if (id == "W")
+      resource = millwheel;
+
+  if (resource == null)
+      return 0;
+ 
+  var value = resource.properties.value;
+  deviceState[id] = value;
+  return value;
+}
+function updatedeviceimage(id, currentState){
+  var imageIdObj = document.getElementById(id + "_img");
+  if (imageIdObj)
+  {
+  var imageon = imageIdObj.getAttribute("data_on");
+  var imageoff = imageIdObj.getAttribute("data_off");
+  if (currentState == 0)
+  {
+    imagetochange = imageoff;
+  }
+  else
+  {
+    imagetochange = imageon;
+  }
+  imageIdObj.src = imagetochange;
+  }
+
+  var deviceObj = document.getElementById(id + "_state");
+  if (deviceObj)
+  {
+     deviceObj.innerHTML = currentState;
+  }
+}
+function getandupdatedeviceimage(id){
+  var currentState = getDeviceState(id);
+  updatedeviceimage(id, currentState);
+}
+function updatedevicestate(id){
+  var currentState = getDeviceState(id);
+  var deviceObj = document.getElementById(id + "_state");
+  if (deviceObj)
+  {
+     deviceObj.innerHTML = currentState;
+  }
+  return currentState;
+}
+function onclickbuttonlogo(id){
+  var docObj = document.getElementById("coap-devices");
+  if (docObj)
+  {
+    var currentStyle = docObj.style.display;
+    if (currentStyle == 'block')
+      docObj.style.display = 'none';
+    else
+      docObj.style.display = 'block';
+  }
+}
+function onclickbutton(id){
+    // Toggle state
+    if ((id != "servo") && (id != "step"))
+    {
+      var currentState = 0;
+      var desiredState = 0;
+      currentState = deviceState[id]; //getDeviceState(id);
+      if (currentState == 0)
+      {
+        desiredState = 1;
+      }
+      else
+      {
+        desiredState = 0;
+      }
+      deviceState[id] = desiredState;
+      updatedeviceimage(id, desiredState);
+      setDeviceState(id, desiredState);
+    }
+    else if (id == "servo")
+    {
+      var currentState = 0;
+      var desiredState = 0;
+      currentState = deviceState[id]; //getDeviceState(id);
+      if (currentState == 90)
+      {
+        desiredState = 270;
+      }
+      else
+      {
+        desiredState = 90;
+      }
+      deviceState[id] = desiredState;
+      //desiredState = (parseInt(currentState) + 90) % 360;
+      setDeviceState(id, desiredState);
+    }
+    else if (id == "step")
+    {
+      var currentState = 0;
+      var desiredState = 0;
+      currentState = deviceState[id]; //getDeviceState(id);
+      if (currentState == 512)
+      {
+        desiredState = -512;
+      }
+      else
+      {
+        desiredState = 512;
+      }
+      deviceState[id] = desiredState;
+      //desiredState = (parseInt(currentState) + 90) % 360;
+
+      var deviceObj = document.getElementById(id + "_state");
+      if (deviceObj)
+      {
+         deviceObj.innerHTML = desiredState;
+      }
+
+      setDeviceState(id, desiredState);
+    }
+}
+function getSensorsState() {
+/*
+    device.client.retrieveResource(millfrontlight.id)
+       .then(function(retrievedres) {
+          LogOutput("Retrieve " + retrievedres.url);
+          retrievedres.properties.value = 1;
+          device.client.updateResource(retrievedres)
+            .then(function() { 
+               LogOutput("Changed resource");
+            },function() { 
+               LogOutput("Error update resource"); 
+          });        
+        }, function(error) { 
+          LogOutput("Cannot retrieve " + millfrontlight.url); 
+    });*/
+
+    for (var i = 0; i < deviceNameArray.length; i++)
+    {
+       // Update innerHTML
+       var id = deviceNameArray[i];
+       var currentState = getDeviceState(id);
+       var deviceObj = document.getElementById(id + "_state");
+       if (deviceObj)
+       {
+           deviceObj.innerHTML = currentState;
+       }
+       deviceState[id] = currentState;
+    }
+
+    updatedeviceimage("l1", deviceState["l1"]);
+    updatedeviceimage("l2", deviceState["l2"]);
+    updatedeviceimage("l3", deviceState["l3"]);
+    updatedeviceimage("W", deviceState["W"]);
+
+    //getandupdatedeviceimage("step", deviceState["step"]);
+}
+
+function refreshDateTime() {
+    var now = new Date().toLocaleString();
+    //now.format("dd/MM/yyyy hh:MM TT");
+    var deviceObj = document.getElementById("currentdatetime");
+    deviceObj.innerHTML = now;
+}
+
+function updateResourceFromNotify(id, resource) {
+
+  if (id == millbacklight.id)
+      millbacklight = resource;
+  else if (id == millrooflight.id)
+      millrooflight = resource;
+  else if (id == millfrontlight.id)
+      millfrontlight = resource;
+  else if (id == milltemperature.id)
+      milltemperature = resource;
+  else if (id == milldistance.id)
+      milldistance = resource;
+  else if (id == millluminosity.id)
+      millluminosity = resource;
+  else if (id == millmotion.id)
+      millmotion = resource;
+  else if (id == millservo.id)
+      millservo = resource;
+  else if (id == millrelai.id)
+      millrelai = resource;
+  else if (id == millwheel.id)
+      millwheel = resource;
+}
+
+function eventHandler(event) {
+  LogOutput("Client eventHandler: type=" + event.type + " id=" + event.resource.id  + " url=" + event.resource.url);
+  if (event.type == "update") {
+    if (event.updatedPropertyNames.length) {
+      updateResourceFromNotify(event.resource.id, event.resource);
+      getSensorsState();
+    }
+  }
+}
+
+function observeResourcesCompleted() {
+    device.client.onresourcechange = eventHandler;
+    getSensorsState();
+}
+
+function observeResourcesLights() {
+    device.client.startObserving(millfrontlight.id)
+      .then(function(observedres) {
+        LogOutput("Observing " + observedres.url);
+        millfrontlight = observedres;
+        device.client.startObserving(millrooflight.id)
+          .then(function(observedres) {
+            LogOutput("Observing " + observedres.url);
+            millrooflight = observedres;
+            device.client.startObserving(millbacklight.id)
+              .then(function(observedres) {
+                LogOutput("Observing " + observedres.url);
+                millbacklight = observedres;
+                //observeResourcesSensors(); // Arduino bugs
+                observeResourcesCompleted();
+              }, function(error) {
+                LogOutput("Cannot observe " + millbacklight.url);
+             });
+          }, function(error) {
+            LogOutput("Cannot observe " + millrooflight.url); 
+        });
+      }, function(error) {
+        LogOutput("Cannot observe " + millfrontlight.url); 
+    });
+}
+
+function observeResourcesActuators() {
+    device.client.startObserving(millservo.id)
+      .then(function(observedres) {
+        LogOutput("Observing " + observedres.url);
+        millservo = observedres;
+        device.client.startObserving(millrelai.id)
+          .then(function(observedres) {
+            LogOutput("Observing " + observedres.url);
+            millrelai = observedres;
+            device.client.startObserving(millwheel.id)
+              .then(function(observedres) {
+                LogOutput("Observing " + observedres.url);
+                millwheel = observedres;
+                observeResourcesCompleted();
+              }, function(error) {
+                LogOutput("Cannot observe " + millwheel.url);
+             });
+          }, function(error) {
+            LogOutput("Cannot observe " + millrelai.url); 
+        });
+      }, function(error) {
+        LogOutput("Cannot observe " + millservo.url); 
+    });
+}
+
+function observeResourcesSensors() {
+    device.client.startObserving(milltemperature.id)
+      .then(function(observedres) {
+        LogOutput("Observing " + observedres.url);
+        milltemperature = observedres;
+        device.client.startObserving(milldistance.id)
+          .then(function(observedres) {
+            LogOutput("Observing " + observedres.url);
+            milldistance = observedres;
+            device.client.startObserving(millluminosity.id)
+              .then(function(observedres) {
+                LogOutput("Observing " + observedres.url);
+                millluminosity = observedres;
+                device.client.startObserving(millmotion.id)
+                  .then(function(observedres) {
+                    LogOutput("Observing " + observedres.url);
+                    millmotion = observedres;
+                    observeResourcesActuators();
+                  }, function(error) {
+                    LogOutput("Cannot observe " + millmotion.url);
+                 });
+              }, function(error) {
+                LogOutput("Cannot observe " + millluminosity.url);
+             });
+          }, function(error) {
+            LogOutput("Cannot observe " + milldistance.url); 
+        });
+      }, function(error) {
+        LogOutput("Cannot observe " + milltemperature.url); 
+    });
+}
+
+function findResourcesLights() {
+
+  device.client.findResources({
+     //deviceId: "bfc88c66-2a4d-41e3-83e2-023864c2d9f3",
+     //resourceType: "", // all
+     resourceType: "mill.frontlight", //mill.frontlight
+     waitsec: 2,
+    }).then(function(list) {
+        millfrontlight = list[0];
+	device.client.findResources({
+	  resourceType: "mill.rooflight",
+	  waitsec: -1,
+	}).then(function(list) {
+	  millrooflight = list[0];
+	    device.client.findResources({
+	      resourceType: "mill.backlight",
+	      waitsec: -1,
+	    }).then(function(list) {
+	      millbacklight = list[0];
+              //findResourcesSensors(); // Arduino bugs
+              findResourcesCompleted();
+            }, function(e) {
+	      console.log("Error finding resources: " + e.message);
+	    });
+	  }, function(e) {
+	   console.log("Error finding resources: " + e.message);
+        });
+      }, function(e) {
+       console.log("Error finding resources: " + e.message);
+    });
+}
+
+function findResourcesActuators() {
+  device.client.findResources({
+     resourceType: "mill.servo",
+     waitsec: -1,
+    }).then(function(list) {
+      millservo = list[0];
+	device.client.findResources({
+	  resourceType: "mill.relai",
+	  waitsec: -1,
+	}).then(function(list) {
+	  millrelai = list[0];
+	    device.client.findResources({
+	      resourceType: "mill.wheel",
+	      waitsec: -1,
+	    }).then(function(list) {
+	      millwheel = list[0];
+              findResourcesCompleted();
+            }, function(e) {
+	      console.log("Error finding resources: " + e.message);
+	    });
+	  }, function(e) {
+	   console.log("Error finding resources: " + e.message);
+        });
+      }, function(e) {
+       console.log("Error finding resources: " + e.message);
+    });
+}
+
+function findResourcesSensors() {
+  device.client.findResources({
+     resourceType: "mill.temperature",
+     waitsec: -1,
+    }).then(function(list) {
+      milltemperature = list[0];
+	device.client.findResources({
+	  resourceType: "mill.distance",
+	  waitsec: -1,
+	}).then(function(list) {
+	  milldistance = list[0];
+	    device.client.findResources({
+	      resourceType: "mill.luminosity",
+	      waitsec: -1,
+	    }).then(function(list) {
+	      millluminosity = list[0];
+              device.client.findResources({
+                resourceType: "mill.motion",
+                waitsec: -1,
+              }).then(function(list) {
+                 millmotion = list[0];
+                 findResourcesActuators();
+              }, function(e) {
+                console.log("Error finding resources: " + e.message);
+              });
+            }, function(e) {
+	      console.log("Error finding resources: " + e.message);
+	    });
+	  }, function(e) {
+	   console.log("Error finding resources: " + e.message);
+        });
+      }, function(e) {
+       console.log("Error finding resources: " + e.message);
+    });
+}
+
+function findResources() {
+    findResourcesLights();
+}
+
+function findResourcesCompleted() {
+    observeResourcesLights();
+}
+
+var pollingdelay = 1000;
+var pollingfunction = function(){
+    refreshDateTime();
+    setTimeout(pollingfunction, pollingdelay);
+}
+
+function applicationinit(){
+    findResources();
+    //pollingfunction();
+}
+
+
+applicationinit();
+
+</script>
+</body>
+</html>

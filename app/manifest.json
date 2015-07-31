@@ -1,0 +1,15 @@
+{
+  "name": "IOC-extension-demo",
+  "xwalk_version": "0.0.0.1",
+  "app": {
+      "launch": {
+          "container": "panel",
+          "local_path": "index.html"
+      }
+  },
+  "description": "IOC-extension-demo",
+  "icons": {
+      "128": "icon.png"
+  }
+}
+
