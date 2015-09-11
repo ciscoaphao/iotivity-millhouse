@@ -191,25 +191,25 @@ function setDeviceState(id, value) {
 
   var resource;
 
-  if (id == "l1")
+  if ((id == "l1") && (millbacklight))
       resource = millbacklight;
-  else if (id == "l2")
+  else if ((id == "l2") && (millrooflight))
       resource = millrooflight;
-  else if (id == "l3")
+  else if ((id == "l3") && (millfrontlight))
       resource = millfrontlight;
-  else if (id == "T")
+  else if ((id == "T") && (milltemperature))
       resource = milltemperature;
-  else if (id == "D")
+  else if ((id == "D") && (milldistance))
       resource = milldistance;
-  else if (id == "L")
+  else if ((id == "L") && (millluminosity))
       resource = millluminosity;
-  else if (id == "M")
+  else if ((id == "M") && (millmotion))
       resource = millmotion;
-  else if (id == "S")
+  else if ((id == "S") && (millservo))
       resource = millservo;
-  else if (id == "R")
+  else if ((id == "R") && (millrelai))
       resource = millrelai;
-  else if (id == "W")
+  else if ((id == "W") && (millwheel))
       resource = millwheel;
 
   if (resource == null)
@@ -229,25 +229,25 @@ function getDeviceState(id) {
 
   var resource = null;
 
-  if (id == "l1")
+  if ((id == "l1") && (millbacklight))
       resource = millbacklight;
-  else if (id == "l2")
+  else if ((id == "l2") && (millrooflight))
       resource = millrooflight;
-  else if (id == "l3")
+  else if ((id == "l3") && (millfrontlight))
       resource = millfrontlight;
-  else if (id == "T")
+  else if ((id == "T") && (milltemperature))
       resource = milltemperature;
-  else if (id == "D")
+  else if ((id == "D") && (milldistance))
       resource = milldistance;
-  else if (id == "L")
+  else if ((id == "L") && (millluminosity))
       resource = millluminosity;
-  else if (id == "M")
+  else if ((id == "M") && (millmotion))
       resource = millmotion;
-  else if (id == "S")
+  else if ((id == "S") && (millservo))
       resource = millservo;
-  else if (id == "R")
+  else if ((id == "R") && (millrelai))
       resource = millrelai;
-  else if (id == "W")
+  else if ((id == "W") && (millwheel))
       resource = millwheel;
 
   if (resource == null)
@@ -367,7 +367,7 @@ function onclickbutton(id){
 }
 function getSensorsState() {
 /*
-    device.client.retrieveResource(millfrontlight.id)
+    device.client.retrieveResource(millbacklight.id)
        .then(function(retrievedres) {
           LogOutput("Retrieve " + retrievedres.url);
           retrievedres.properties.value = 1;
@@ -378,9 +378,9 @@ function getSensorsState() {
                LogOutput("Error update resource"); 
           });        
         }, function(error) { 
-          LogOutput("Cannot retrieve " + millfrontlight.url); 
-    });*/
-
+          LogOutput("Cannot retrieve " + millbacklight.url); 
+    });
+*/
     for (var i = 0; i < deviceNameArray.length; i++)
     {
        // Update innerHTML
@@ -411,25 +411,25 @@ function refreshDateTime() {
 
 function updateResourceFromNotify(id, resource) {
 
-  if (id == millbacklight.id)
+  if ((millbacklight) && (id == millbacklight.id))
       millbacklight = resource;
-  else if (id == millrooflight.id)
+  else if ((millrooflight) && (id == millrooflight.id))
       millrooflight = resource;
-  else if (id == millfrontlight.id)
+  else if ((millfrontlight) && (id == millfrontlight.id))
       millfrontlight = resource;
-  else if (id == milltemperature.id)
+  else if ((milltemperature) && (id == milltemperature.id))
       milltemperature = resource;
-  else if (id == milldistance.id)
+  else if ((milldistance) && (id == milldistance.id))
       milldistance = resource;
-  else if (id == millluminosity.id)
+  else if ((millluminosity) && (id == millluminosity.id))
       millluminosity = resource;
-  else if (id == millmotion.id)
+  else if ((millmotion) && (id == millmotion.id))
       millmotion = resource;
-  else if (id == millservo.id)
+  else if ((millservo) && (id == millservo.id))
       millservo = resource;
-  else if (id == millrelai.id)
+  else if ((millrelai) && (id == millrelai.id))
       millrelai = resource;
-  else if (id == millwheel.id)
+  else if ((millwheel) && (id == millwheel.id))
       millwheel = resource;
 }
 
@@ -443,196 +443,75 @@ function eventHandler(event) {
   }
 }
 
-function observeResourcesCompleted() {
-    device.client.onresourcechange = eventHandler;
-    getSensorsState();
-}
-
-function observeResourcesLights() {
-    device.client.startObserving(millfrontlight.id)
-      .then(function(observedres) {
-        LogOutput("Observing " + observedres.url);
-        millfrontlight = observedres;
-        device.client.startObserving(millrooflight.id)
-          .then(function(observedres) {
-            LogOutput("Observing " + observedres.url);
-            millrooflight = observedres;
-            device.client.startObserving(millbacklight.id)
-              .then(function(observedres) {
-                LogOutput("Observing " + observedres.url);
-                millbacklight = observedres;
-                //observeResourcesSensors(); // Arduino bugs
-                observeResourcesCompleted();
-              }, function(error) {
-                LogOutput("Cannot observe " + millbacklight.url);
-             });
-          }, function(error) {
-            LogOutput("Cannot observe " + millrooflight.url); 
-        });
-      }, function(error) {
-        LogOutput("Cannot observe " + millfrontlight.url); 
-    });
-}
-
-function observeResourcesActuators() {
-    device.client.startObserving(millservo.id)
-      .then(function(observedres) {
-        LogOutput("Observing " + observedres.url);
-        millservo = observedres;
-        device.client.startObserving(millrelai.id)
-          .then(function(observedres) {
-            LogOutput("Observing " + observedres.url);
-            millrelai = observedres;
-            device.client.startObserving(millwheel.id)
-              .then(function(observedres) {
-                LogOutput("Observing " + observedres.url);
-                millwheel = observedres;
-                observeResourcesCompleted();
-              }, function(error) {
-                LogOutput("Cannot observe " + millwheel.url);
-             });
-          }, function(error) {
-            LogOutput("Cannot observe " + millrelai.url); 
-        });
-      }, function(error) {
-        LogOutput("Cannot observe " + millservo.url); 
-    });
-}
-
-function observeResourcesSensors() {
-    device.client.startObserving(milltemperature.id)
-      .then(function(observedres) {
-        LogOutput("Observing " + observedres.url);
-        milltemperature = observedres;
-        device.client.startObserving(milldistance.id)
-          .then(function(observedres) {
-            LogOutput("Observing " + observedres.url);
-            milldistance = observedres;
-            device.client.startObserving(millluminosity.id)
-              .then(function(observedres) {
-                LogOutput("Observing " + observedres.url);
-                millluminosity = observedres;
-                device.client.startObserving(millmotion.id)
-                  .then(function(observedres) {
-                    LogOutput("Observing " + observedres.url);
-                    millmotion = observedres;
-                    observeResourcesActuators();
-                  }, function(error) {
-                    LogOutput("Cannot observe " + millmotion.url);
-                 });
-              }, function(error) {
-                LogOutput("Cannot observe " + millluminosity.url);
-             });
-          }, function(error) {
-            LogOutput("Cannot observe " + milldistance.url); 
-        });
-      }, function(error) {
-        LogOutput("Cannot observe " + milltemperature.url); 
-    });
-}
-
-function findResourcesLights() {
-
+function findResourcesWithUUID(uuid) {
   device.client.findResources({
-     //deviceId: "bfc88c66-2a4d-41e3-83e2-023864c2d9f3",
-     //resourceType: "", // all
-     resourceType: "mill.frontlight", //mill.frontlight
-     waitsec: 2,
+     deviceId: uuid,
+     waitsec: 5,
     }).then(function(list) {
-        millfrontlight = list[0];
-	device.client.findResources({
-	  resourceType: "mill.rooflight",
-	  waitsec: -1,
-	}).then(function(list) {
-	  millrooflight = list[0];
-	    device.client.findResources({
-	      resourceType: "mill.backlight",
-	      waitsec: -1,
-	    }).then(function(list) {
-	      millbacklight = list[0];
-              //findResourcesSensors(); // Arduino bugs
-              findResourcesCompleted();
-            }, function(e) {
-	      console.log("Error finding resources: " + e.message);
-	    });
-	  }, function(e) {
-	   console.log("Error finding resources: " + e.message);
-        });
+       for(var i = 0; i < list.length; i++) {
+          res = list[i];
+
+          device.client.onresourcechange = eventHandler;
+
+          device.client.startObserving(res.id)
+            .then(function(observedres) {
+               LogOutput("Observing " + observedres.url);
+              res = observedres;
+            }, function(error) {
+               LogOutput("Cannot observe " + res.url); 
+          });
+
+          if (res.resourceTypes[0] == "mill.backlight")
+              millbacklight = res;
+          if (res.resourceTypes[0] == "mill.rooflight")
+              millrooflight = res;
+          if (res.resourceTypes[0] == "mill.frontlight")
+              millfrontlight = res;
+
+          if (res.resourceTypes[0] == "mill.servo")
+              millservo = res;
+          if (res.resourceTypes[0] == "mill.relai")
+              millrelai = res;
+          if (res.resourceTypes[0] == "mill.wheel")
+              millwheel = res;
+
+          if (res.resourceTypes[0] == "mill.temperature")
+              milltemperature = res;
+          if (res.resourceTypes[0] == "mill.distance")
+              milldistance = res;
+          if (res.resourceTypes[0] == "mill.luminosity")
+              millluminosity = res;
+          if (res.resourceTypes[0] == "mill.motion")
+              millmotion = res;
+        }
+
+        getSensorsState();
       }, function(e) {
-       console.log("Error finding resources: " + e.message);
+       console.log("Error finding resources with UUID: " + e.message);
     });
 }
 
-function findResourcesActuators() {
-  device.client.findResources({
-     resourceType: "mill.servo",
-     waitsec: -1,
+function findResources(uuid) {
+    if (uuid == "") {
+ 
+    } else {
+      findResourcesWithUUID(uuid);
+    }
+}
+
+function findDevice(devicename) {
+  device.client.findDevices({
+      waitsec: 5,
     }).then(function(list) {
-      millservo = list[0];
-	device.client.findResources({
-	  resourceType: "mill.relai",
-	  waitsec: -1,
-	}).then(function(list) {
-	  millrelai = list[0];
-	    device.client.findResources({
-	      resourceType: "mill.wheel",
-	      waitsec: -1,
-	    }).then(function(list) {
-	      millwheel = list[0];
-              findResourcesCompleted();
-            }, function(e) {
-	      console.log("Error finding resources: " + e.message);
-	    });
-	  }, function(e) {
-	   console.log("Error finding resources: " + e.message);
-        });
+       for(var i = 0; i < list.length; i++) {
+          res = list[i];
+          if (res.name == devicename) {
+            findResources(res.uuid);
+          }
+        }
       }, function(e) {
-       console.log("Error finding resources: " + e.message);
-    });
-}
-
-function findResourcesSensors() {
-  device.client.findResources({
-     resourceType: "mill.temperature",
-     waitsec: -1,
-    }).then(function(list) {
-      milltemperature = list[0];
-	device.client.findResources({
-	  resourceType: "mill.distance",
-	  waitsec: -1,
-	}).then(function(list) {
-	  milldistance = list[0];
-	    device.client.findResources({
-	      resourceType: "mill.luminosity",
-	      waitsec: -1,
-	    }).then(function(list) {
-	      millluminosity = list[0];
-              device.client.findResources({
-                resourceType: "mill.motion",
-                waitsec: -1,
-              }).then(function(list) {
-                 millmotion = list[0];
-                 findResourcesActuators();
-              }, function(e) {
-                console.log("Error finding resources: " + e.message);
-              });
-            }, function(e) {
-	      console.log("Error finding resources: " + e.message);
-	    });
-	  }, function(e) {
-	   console.log("Error finding resources: " + e.message);
-        });
-      }, function(e) {
-       console.log("Error finding resources: " + e.message);
-    });
-}
-
-function findResources() {
-    findResourcesLights();
-}
-
-function findResourcesCompleted() {
-    observeResourcesLights();
+        console.log("Error finding devices: " + e.message);
+     });
 }
 
 var pollingdelay = 1000;
@@ -642,7 +521,7 @@ var pollingfunction = function(){
 }
 
 function applicationinit(){
-    findResources();
+    findDevice("Arduino MillHouse");
     //pollingfunction();
 }
 
